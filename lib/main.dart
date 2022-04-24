@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
 Future<Meme> fetchMeme() async {
   final response = await http
       .get(Uri.parse('http://10.0.2.2:4200/randomMeme'));
+      // This URL is used for android emulator as loopback for localhost.
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,

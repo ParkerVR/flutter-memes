@@ -2,13 +2,14 @@
 
 This app allows for random memes based on an API that looks like this:
 
-localhost:4200/randomMeme
-Response (b64 encoded)
+```
+GET localhost:4200/randomMeme
+Response (b64 encoded) with code 200
 {
   "title": "TheTitleOfTheMeme",
   "imgurl": "TheUrlOfTheMeme" 
 }
-
+```
 ## Getting Started With Flutter
 
 This project is a starting point for a Flutter application.

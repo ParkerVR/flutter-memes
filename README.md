@@ -1,8 +1,15 @@
-# app_1
+# Flutter Memes
 
-A new Flutter project.
+This app allows for random memes based on an API that looks like this:
 
-## Getting Started
+localhost:4200/randomMeme
+Response (b64 encoded)
+{
+  "title": "TheTitleOfTheMeme",
+  "imgurl": "TheUrlOfTheMeme" 
+}
+
+## Getting Started With Flutter
 
 This project is a starting point for a Flutter application.
 
@@ -14,3 +21,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Run the App
+
+`flutter run lib/main.dart` (Though I prefer to use VSCode Flutter Plugin and hit the play button! Tested on Windows and Android Emulator)

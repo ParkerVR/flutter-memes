@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -40,21 +42,25 @@ class MyApp extends StatelessWidget {
 }
 
 Future<Meme> fetchMeme() async {
-  final response = await http
+  try {
+    final response = await http
       .get(Uri.parse('http://10.0.2.2:4200/randomMeme'));
       // This URL is used for android emulator as loopback for localhost.
 
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
 
-    String decodedBody = utf8.decode(base64Decode(response.body.replaceAll("\"", "")));
-    var jsonDecodedBody = json.decode(decodedBody);
-    return Meme.fromJson(jsonDecodedBody);
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load meme');
+      String decodedBody = utf8.decode(base64Decode(response.body.replaceAll("\"", "")));
+      var jsonDecodedBody = json.decode(decodedBody);
+      return Meme.fromJson(jsonDecodedBody);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load meme');
+    }
+  } on Exception { 
+    return const Meme(imgurl: "https://i.imgur.com/PLTmBlW.png", title: "Fail");
   }
 }
 
@@ -84,20 +90,25 @@ class BackgroundImg extends StatefulWidget {
 
 class _BackgroundImgState extends State<BackgroundImg> {
   
-  late Meme currentMeme = const Meme(title: "Base Page", imgurl: "https://i.imgur.com/PLTmBlW.png", );
-  late Meme nextMeme;
-
-  void setupNextMeme() async {
-    nextMeme = await fetchMeme();
-    precacheImage(NetworkImage(nextMeme.imgurl), context);
-  }
-
   @protected
   @override
   void initState() {
     super.initState();
   }
 
+  late Meme currentMeme = const Meme(title: "Base Page", imgurl: "https://i.imgur.com/PLTmBlW.png", );
+  late Meme nextMeme = const Meme(title: "Base Page", imgurl: "https://i.imgur.com/PLTmBlW.png", );
+
+
+  void setupNextMeme() async {
+    nextMeme = await fetchMeme();
+    precacheImage(NetworkImage(nextMeme.imgurl), context);
+  }
+  
+  void updateImage() {
+    currentMeme = nextMeme;
+    setupNextMeme();
+  }
   
   @override
   void didChangeDependencies() {
@@ -105,15 +116,36 @@ class _BackgroundImgState extends State<BackgroundImg> {
     super.didChangeDependencies();
   }
 
-  void updateImage() {
-    currentMeme = nextMeme;
-    setupNextMeme();
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 22, 22, 22),
+      floatingActionButton: FloatingActionButton.extended(
+
+        // Icon
+        icon: const Icon(Icons.local_fire_department_sharp),
+        foregroundColor: Colors.red,
+
+
+        // To remove label: set FAB not extended, set icon as 'child:'
+        label: const Text('FIYA'),
+
+        
+        
+        // Background
+        hoverColor: Colors.amberAccent,
+        backgroundColor: Colors.amber,
+
+        // Button Action
+        onPressed: ()  {
+          setState(() {
+            updateImage();
+          });
+        },
+      ),
+
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -171,11 +203,9 @@ class _BackgroundImgState extends State<BackgroundImg> {
                         primary: Colors.green
                       ),
                       onPressed: () {
-                        setState(() {
-                          updateImage();
-                        });
+                        print("Thanks, Elite Coding Squadron of Fundasy!");
                       },
-                      child: const Text('NEXT MEME')
+                      child: const Text('Thank Developers')
                     ),
                     // const Spacer(),
                   ]

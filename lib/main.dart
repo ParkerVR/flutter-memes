@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 //import 'dart:io' as Io;
@@ -110,6 +111,17 @@ class _BackgroundImgState extends State<BackgroundImg> {
     setupNextMeme();
   }
   
+
+  void fiyaButtonHandler() {
+    print("Fiya Meme: \"" + currentMeme.title + "\" (" + currentMeme.imgurl +")");
+    updateImage();
+  }
+
+  void mehButtonHandler() {
+    print("Meh Meme: \"" + currentMeme.title + "\" (" + currentMeme.imgurl +")");
+    updateImage();
+  }
+
   @override
   void didChangeDependencies() {
     setupNextMeme();
@@ -122,17 +134,15 @@ class _BackgroundImgState extends State<BackgroundImg> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 22, 22, 22),
-      floatingActionButton: FloatingActionButton.extended(
+      
+
+      /*
+      // To add text: set FAB.extended, set child as 'icon:'
+      floatingActionButton: FloatingActionButton(
 
         // Icon
-        icon: const Icon(Icons.local_fire_department_sharp),
+        child: const Icon(Icons.toggle_off_rounded),
         foregroundColor: Colors.red,
-
-
-        // To remove label: set FAB not extended, set icon as 'child:'
-        label: const Text('FIYA'),
-
-        
         
         // Background
         hoverColor: Colors.amberAccent,
@@ -144,7 +154,8 @@ class _BackgroundImgState extends State<BackgroundImg> {
             updateImage();
           });
         },
-      ),
+      ), // FloatingActionButton
+      */
 
       body: Container(
         decoration: BoxDecoration(
@@ -169,48 +180,79 @@ class _BackgroundImgState extends State<BackgroundImg> {
                     )
                   ))
                 ]),
-                const Spacer(),
+                const Spacer(flex: 18),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center ,
                   children: [
-                    /*const Spacer(),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.red
+                    const Spacer(flex: 4),
+                    ElevatedButton.icon(
+                      icon: const Icon(
+                        Icons.money_off_sharp, 
+                        color: Colors.amber,
+                        size: 15, 
                       ),
+                      label: const Text('meh', style:TextStyle(
+                        fontSize: 20, 
+                        color: Colors.amber, 
+                        fontFamily: "ComicMono", 
+                        fontWeight: FontWeight.normal),
+
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0.0,
+                        
+                        primary: Colors.red,
+
+                        shape: const StadiumBorder(
+                          side: BorderSide(width: 5, color: Colors.red),
+                        )
+                        //side: 
+                      ), 
                       onPressed: () {
                         setState(() {
-                          updateImage();
+                          mehButtonHandler();
                         });
                       },
-                      child: const Text('TRASH')
+                      
                     ),
-                    const Spacer(),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.purple
+                    const Spacer(flex: 1),
+                    ElevatedButton.icon(
+                      icon: const Icon(
+                        Icons.local_fire_department_sharp, 
+                        color: Colors.red,
+                        size: 18, 
                       ),
+                      label: const Text('FIYA', style:TextStyle(
+                        fontSize: 20, 
+                        color: Colors.red, 
+                        fontFamily: "ComicMono", 
+                        fontWeight: FontWeight.normal),
+
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        
+                        elevation: 0.0,
+                        
+                        primary: Colors.amber,
+                        
+                        shape: const StadiumBorder(
+                          side: BorderSide(width: 5, color: Colors.amber),
+                        )
+                        //side: 
+                      ), 
                       onPressed: () {
                         setState(() {
-                          updateImage();
+                          fiyaButtonHandler();
                         });
                       },
-                      child: const Text('MID')
+                      
                     ),
-                    const Spacer(),*/
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green
-                      ),
-                      onPressed: () {
-                        print("Thanks, Elite Coding Squadron of Fundasy!");
-                      },
-                      child: const Text('Thank Developers')
-                    ),
-                    // const Spacer(),
+                    const Spacer(flex: 4),
                   ]
                 ),
+                const Spacer(),
               ],
+              
             ),
           ),
         ),

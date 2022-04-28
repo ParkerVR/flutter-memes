@@ -1,7 +1,10 @@
 
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 //import 'dart:io' as Io;
@@ -61,18 +64,73 @@ Future<Meme> fetchMeme() async {
       throw Exception('Failed to load meme');
     }
   } on Exception { 
-    return const Meme(imgurl: "https://i.imgur.com/PLTmBlW.png", title: "Fail");
+    return Meme(imgurl: "https://i.imgur.com/PLTmBlW.png", title: "Fail");
+  }
+}
+
+Future<int> fetchMemeLikes(String imgurl) async {
+  String url = 'http://10.0.2.2:4200/getMemeLikes?imgurl='+imgurl;
+  try {
+    final response = await http
+      .get(Uri.parse(url));
+      // This URL is used for android emulator as loopback for localhost.
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then return the value
+      return int.parse(response.body);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      print("Fail");
+      throw Exception('Failed to get likes');
+    }
+  } on Exception { 
+    return -1;
+  }
+}
+
+void postLikeMeme(Meme meme) async {
+  String url = "http://10.0.2.2:4200/likeMeme";
+  // This URL is used for android emulator as loopback for localhost.
+
+  Random r = Random();
+  int uid = r.nextInt(1000);
+  print("Meme Liked: " + meme.imgurl);
+  try {
+    final response = await http
+      .post(
+        Uri.parse(url),
+        body: jsonEncode(<String, String>{
+          "imgurl": meme.imgurl,
+          "title": meme.title,
+          "liker": "ParkerVR"+uid.toString(),
+        })
+      );
+
+    if (response.statusCode == 202) {
+      // If the server did return a 202 ACCEPTED response,
+      // then return the value
+      Icons.assignment_return_outlined;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to like');
+    }
+  } on Exception { 
+    return;
   }
 }
 
 class Meme {
   final String title;
   final String imgurl;
+  late int likes = 0;
 
-  const Meme({
+  Meme({
     required this.title,
     required this.imgurl,
   });
+
 
   factory Meme.fromJson(Map<String, dynamic> json) {
     return Meme(
@@ -97,38 +155,63 @@ class _BackgroundImgState extends State<BackgroundImg> {
     super.initState();
   }
 
-  late Meme currentMeme = const Meme(title: "Base Page", imgurl: "https://i.imgur.com/PLTmBlW.png", );
-  late Meme nextMeme = const Meme(title: "Base Page", imgurl: "https://i.imgur.com/PLTmBlW.png", );
+  late Meme currentMeme = Meme(title: "Base Page", imgurl: "https://i.imgur.com/PLTmBlW.png", );
+  late Meme nextMeme = Meme(title: "Base Page", imgurl: "https://i.imgur.com/PLTmBlW.png", );
 
 
   void setupNextMeme() async {
     nextMeme = await fetchMeme();
     precacheImage(NetworkImage(nextMeme.imgurl), context);
+    int nextLikes = await fetchMemeLikes(nextMeme.imgurl);
+    nextMeme.likes = nextLikes;
+    print("Next Meme URL: " + nextMeme.imgurl);
+    print("Next Meme Likes: " + nextMeme.likes.toString());
   }
   
   void updateImage() {
     currentMeme = nextMeme;
     setupNextMeme();
+    print("Current Meme Likes: " + currentMeme.likes.toString());
   }
-  
 
-  void fiyaButtonHandler() {
+  void updateCurrentLikes() async {
+    int likes = await fetchMemeLikes(currentMeme.imgurl);
+    setState(() {
+      currentMeme.likes = likes;  
+    });
+    print("Current Meme Likes: " + currentMeme.likes.toString());
+  }
+
+  void likeCurrentMeme() async {
+    currentMeme.likes++;
+    postLikeMeme(currentMeme);
+  }
+
+  void fiyaButtonHandler() async {
+    likeCurrentMeme();
+    //try {
+    //  await GallerySaver.saveImage(currentMeme.imgurl);
+    //} on Exception { 
+    //  return;
+    //}
     print("Fiya Meme: \"" + currentMeme.title + "\" (" + currentMeme.imgurl +")");
     updateImage();
   }
 
-  void mehButtonHandler() {
+  void mehButtonHandler() async {
     print("Meh Meme: \"" + currentMeme.title + "\" (" + currentMeme.imgurl +")");
     updateImage();
   }
 
   @override
   void didChangeDependencies() {
-    setupNextMeme();
+    setState(() {
+      updateCurrentLikes();
+      setupNextMeme();
+    });
+    
     super.didChangeDependencies();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -180,18 +263,23 @@ class _BackgroundImgState extends State<BackgroundImg> {
                     )
                   ))
                 ]),
+                Row(children:[
+                  Flexible( child: Text(
+                    "LIKES: " + currentMeme.likes.toString(), 
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 22, 22, 22), 
+                      backgroundColor: Color.fromARGB(225, 233, 233, 233), 
+                      fontFamily: "ComicMono"
+                    )
+                  ))
+                ]),
                 const Spacer(flex: 18),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center ,
                   children: [
                     const Spacer(flex: 4),
-                    ElevatedButton.icon(
-                      icon: const Icon(
-                        Icons.money_off_sharp, 
-                        color: Colors.amber,
-                        size: 15, 
-                      ),
-                      label: const Text('meh', style:TextStyle(
+                    ElevatedButton(
+                      child: const Text('meh.', style:TextStyle(
                         fontSize: 20, 
                         color: Colors.amber, 
                         fontFamily: "ComicMono", 
@@ -209,7 +297,7 @@ class _BackgroundImgState extends State<BackgroundImg> {
                         //side: 
                       ), 
                       onPressed: () {
-                        setState(() {
+                        setState(() {                  
                           mehButtonHandler();
                         });
                       },

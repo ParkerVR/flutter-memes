@@ -103,7 +103,7 @@ void postLikeMeme(Meme meme) async {
         body: jsonEncode(<String, String>{
           "imgurl": meme.imgurl,
           "title": meme.title,
-          "liker": "ParkerVR"+uid.toString(),
+          "liker": "ParkerVR",//+uid.toString(),
         })
       );
 

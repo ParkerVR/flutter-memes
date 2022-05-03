@@ -10,6 +10,8 @@ import 'dart:convert';
 //import 'dart:io' as Io;
 
 const String backendip="167.99.234.238:4200";
+const String username="ParkerVR";
+
 
 void main() => runApp(const MyApp());
 
@@ -73,6 +75,7 @@ Future<Meme> fetchMeme() async {
 
 Future<int> fetchMemeLikes(String imgurl) async {
   String url = 'http://$backendip/getMemeLikes?imgurl='+imgurl;
+  print(url);
   try {
     final response = await http
       .get(Uri.parse(url));
@@ -97,7 +100,7 @@ void postLikeMeme(Meme meme) async {
   // This URL is used for android emulator as loopback for localhost.
 
   Random r = Random();
-  int uid = r.nextInt(1000);
+  //int uid = r.nextInt(1000);
   print("Meme Liked: " + meme.imgurl);
   try {
     final response = await http
@@ -106,7 +109,7 @@ void postLikeMeme(Meme meme) async {
         body: jsonEncode(<String, String>{
           "imgurl": meme.imgurl,
           "title": meme.title,
-          "liker": "ParkerVR",//+uid.toString(),
+          "liker": username,//+uid.toString(),
         })
       );
 
@@ -243,15 +246,20 @@ class _BackgroundImgState extends State<BackgroundImg> {
       ), // FloatingActionButton
       */
 
-      body: Container(
+      body: /*InteractiveViewer(Container( //BackgroundImage
         decoration: BoxDecoration(
           image: DecorationImage(
-            fit: BoxFit.contain,
-            image: NetworkImage(currentMeme.imgurl),
+          fit: BoxFit.contain,
+          image: NetworkImage(currentMeme.imgurl),
           ),
-        ),
-        child: Container(
-          
+        ),),
+        child: */ 
+        Stack ( children: <Widget> [
+          Center( child: InteractiveViewer(
+            child: Image.network(currentMeme.imgurl),
+          //scaleEnabled:
+          ),),
+          Container(
           margin: const EdgeInsets.only(top: 10.0),
           child: Center(
             child: Column(
@@ -339,15 +347,15 @@ class _BackgroundImgState extends State<BackgroundImg> {
                       
                     ),
                     const Spacer(flex: 4),
-                  ]
-                ),
-                const Spacer(),
-              ],
+                    ]
+                  ),
+                  const Spacer(),
+                ],
               
+              ),
             ),
           ),
-        ),
-      ),
+        ],),
     );
   }
 }

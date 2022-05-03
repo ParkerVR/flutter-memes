@@ -46,4 +46,5 @@
   <key>NSPhotoLibraryUsageDescription</key>
 	<string>Save Memes</string>
 </dict>
+  <key>ITSAppUsesNonExemptEncryption</key>
 </plist>

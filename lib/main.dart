@@ -9,11 +9,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 //import 'dart:io' as Io;
 
+const String backendip="167.99.234.238:4200";
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   
   final String title="The Memeing of Life";
+  
 
   const MyApp({Key? key}) : super(key: key);
   
@@ -48,7 +51,7 @@ class MyApp extends StatelessWidget {
 Future<Meme> fetchMeme() async {
   try {
     final response = await http
-      .get(Uri.parse('http://10.0.2.2:4200/randomMeme'));
+      .get(Uri.parse('http://$backendip/randomMeme'));
       // This URL is used for android emulator as loopback for localhost.
 
     if (response.statusCode == 200) {
@@ -69,7 +72,7 @@ Future<Meme> fetchMeme() async {
 }
 
 Future<int> fetchMemeLikes(String imgurl) async {
-  String url = 'http://10.0.2.2:4200/getMemeLikes?imgurl='+imgurl;
+  String url = 'http://$backendip/getMemeLikes?imgurl='+imgurl;
   try {
     final response = await http
       .get(Uri.parse(url));
@@ -90,7 +93,7 @@ Future<int> fetchMemeLikes(String imgurl) async {
 }
 
 void postLikeMeme(Meme meme) async {
-  String url = "http://10.0.2.2:4200/likeMeme";
+  String url = "http://$backendip/likeMeme";
   // This URL is used for android emulator as loopback for localhost.
 
   Random r = Random();

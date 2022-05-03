@@ -38,4 +38,5 @@ workflows:
         key_id: JYKTB4P64G
         issuer_id: 074f2d6b-2062-4bc0-832f-211c18740a10
         submit_to_testflight: true
-        submit_to_app_store: false
+        submit_to_app_store: true
+        release_type: MANUAL

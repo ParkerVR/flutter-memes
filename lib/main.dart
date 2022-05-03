@@ -257,7 +257,7 @@ class _BackgroundImgState extends State<BackgroundImg> {
         Stack ( children: <Widget> [
           Center( child: InteractiveViewer(
             child: Image.network(currentMeme.imgurl),
-          //scaleEnabled:
+            clipBehavior: Clip.none,
           ),),
           Container(
           margin: const EdgeInsets.only(top: 10.0),

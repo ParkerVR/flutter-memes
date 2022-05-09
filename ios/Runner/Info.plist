@@ -49,5 +49,7 @@
 	<string>YES</string>
   <key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+  <key>beta-reports-active</key>
+  <true/>
 </dict>
 </plist>

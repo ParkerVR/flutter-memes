@@ -6,9 +6,12 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'controller.dart';
+
 
 const String backendip="167.99.234.238:4200";
-const String username="ParkerVR";
+late String username="ParkerVR";
 
 Future<Meme> fetchMeme() async {
   try {
@@ -183,6 +186,8 @@ class _MemeScreenState extends State<MemeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Controller c = Get.find();
+    username = "${c.username}";
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 22, 22, 22),
       
@@ -226,6 +231,16 @@ class _MemeScreenState extends State<MemeScreen> {
           child: Center(
             child: Column(
               children: [
+                Row(children:[
+                  Flexible( child: Obx(()=>Text(
+                    "USERNAME: ${c.username}", 
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 22, 22, 22), 
+                      backgroundColor: Color.fromARGB(225, 233, 233, 233), 
+                      fontFamily: "ComicMono"
+                    )
+                  )))
+                ]),
                 Row(children:[
                   Flexible( child: Text(
                     "TITLE: " + currentMeme.title, 

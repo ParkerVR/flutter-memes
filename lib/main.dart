@@ -8,12 +8,18 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// Get is for page routing https://pub.dev/packages/get
+import 'package:get/get.dart';
+import 'controller.dart';
+
 import 'memeScreen.dart';
 import 'login.dart';
 //import 'dart:io' as Io;
 
 
 void main() => runApp(MyApp());
+
+
 
 class MyApp extends StatelessWidget {
   
@@ -27,12 +33,16 @@ class MyApp extends StatelessWidget {
 
   MyApp({Key? key}) : super(key: key);
   
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+
+     final Controller c = Get.put(Controller());
+
+    return GetMaterialApp(
       title: title,
       // theme: ThemeData(fontFamily: 'Mango'),
-      home: LoginScreen(),
+      home: const LoginScreen(),
       routes: routes, 
       /*home: Scaffold(
         appBar: AppBar(

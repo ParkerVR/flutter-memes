@@ -1,5 +1,5 @@
 name: app_1
-description: A new Flutter project.
+description: We have memes.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-
+  get: ^4.6.1 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2

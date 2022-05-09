@@ -1,7 +1,9 @@
 import 'package:app_1/memeScreen.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const LoginScreen());
+import 'package:get/get.dart';
+import 'controller.dart';
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,7 +13,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const appTitle = 'Form Validation Demo';
+    const appTitle = 'Username Entry';
 
     return MaterialApp(
       title: appTitle,
@@ -25,60 +27,45 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-// Create a Form widget.
+// Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
   const MyCustomForm({Key? key}) : super(key: key);
 
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
-  }
+  _MyCustomFormState createState() => _MyCustomFormState();
 }
 
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
+
+// Define a corresponding State class.
+// This class holds the data related to the Form.
+class _MyCustomFormState extends State<MyCustomForm> {
+  // Create a text controller and use it to retrieve the current value
+  // of the TextField.
+  final usernameTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    usernameTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            // The validator receives the text that the user has entered.
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Enter a Username';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
-                }
-              },
-              child: const Text('Submit Username'),
-            ),
-          ),
-        ],
+    final Controller c = Get.find();
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: TextField(
+          controller: usernameTextController,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          c.setUsername(usernameTextController.text);
+          Get.to(const MemeScreen());
+        },
+        child: const Icon(Icons.text_fields),
       ),
     );
   }

@@ -1,9 +1,8 @@
-import 'package:app_1/memeScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'controller.dart';
-
+import 'memeScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
